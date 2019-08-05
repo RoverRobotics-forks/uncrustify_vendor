@@ -44,14 +44,10 @@ macro(build_uncrustify)
     set(patch_exe patch)
   endif()
 
-  # Pinning to tip of master at the time of a desired bugfix
-  set(uncrustify_version 45b836cff040594994d364ad6fd3f04adc890a26)
-  set(uncrustify_version_hash 7cc32ad800c8d639bdf145e2a113a66b)
-  # Get uncrustify 0.68.1
-  ExternalProject_Add(uncrustify-0.68.1
-    URL https://github.com/uncrustify/uncrustify/archive/${uncrustify_version}.tar.gz
-    URL_MD5 ${uncrustify_version_hash}
-    TIMEOUT 600
+  ExternalProject_Add(uncrustify
+    GIT_REPOSITORY https://github.com/RoverRobotics-forks/uncrustify.git
+    GIT_REMOTE_NAME origin
+    GIT_TAG origin/master
     CMAKE_ARGS
       -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_install
       ${extra_cmake_args}
@@ -70,27 +66,7 @@ macro(build_uncrustify)
   )
 endmacro()
 
-execute_process(
-  COMMAND uncrustify --version
-  RESULT_VARIABLE res
-  OUTPUT_VARIABLE out
-  ERROR_VARIABLE err
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  ERROR_STRIP_TRAILING_WHITESPACE
-)
-set(need_local_build FALSE)
-if(NOT res EQUAL 0)
-  set(need_local_build TRUE)
-else()
-  # version of uncrustify before 0.65 user a different versionning scheme so the regex wont be matched
-  string(REGEX REPLACE "^Uncrustify-(.*)_f$" "\\1" version_prefix_match "${out}")
-  if(version_prefix_match STREQUAL "" OR version_prefix_match VERSION_LESS 0.68)
-    set(need_local_build TRUE)
-  endif()
-endif()
-if(need_local_build)
-  build_uncrustify()
-endif()
+build_uncrustify()
 
 # this ensures that the package has an environment hook setting the PATH
 ament_package()

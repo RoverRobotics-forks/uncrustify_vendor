@@ -45,7 +45,7 @@ macro(build_uncrustify)
   endif()
 
   ExternalProject_Add(uncrustify
-    GIT_REPOSITORY https://github.com/RoverRobotics-forks/uncrustify.git
+    GIT_REPOSITORY https://github.com/uncrustify/uncrustify.git
     GIT_REMOTE_NAME origin
     GIT_TAG origin/master
     CMAKE_ARGS

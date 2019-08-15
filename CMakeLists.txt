@@ -38,11 +38,6 @@ macro(build_uncrustify)
 
   include(ExternalProject)
 
-  if(WIN32)
-    set(patch_exe patch.exe)
-  else()
-    set(patch_exe patch)
-  endif()
 
   ExternalProject_Add(uncrustify
     GIT_REPOSITORY https://github.com/uncrustify/uncrustify.git
@@ -52,8 +47,6 @@ macro(build_uncrustify)
       -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_install
       ${extra_cmake_args}
       -Wno-dev
-    PATCH_COMMAND
-      ${patch_exe} -p1 -N < ${CMAKE_CURRENT_SOURCE_DIR}/install-patch.diff
   )
 
   # The external project will install to the build folder, but we'll install that on make install.
